@@ -2,8 +2,8 @@
 """Phone Pad: use phones as virtual gamepads on Linux (Xbox 360, PS4, or Steam Input)."""
 import argparse
 import json
-import socket
 import os
+import socket
 
 from aiohttp import WSMsgType, web
 from evdev import UInput
@@ -91,10 +91,21 @@ def type_char(km, prof, ch):
 
 
 def apply(pad, km, prof, msg):
+    if not isinstance(msg, dict):
+        return
     pad_dirty = False
     km_dirty = False
 
     for key, v in msg.items():
+        # Keyboard keys come with a KB_ prefix so they never clash
+        # with gamepad buttons (A, B, X, Y, ...)
+        if key.startswith("KB_"):
+            code = prof.get("keys", {}).get(key[3:])
+            if km and code:
+                km.write(e.EV_KEY, code, 1 if v else 0)
+                km_dirty = True
+            continue
+
         axis = prof["axes"].get(key)
         if axis:
             code, info, lo, hi = axis
@@ -109,9 +120,6 @@ def apply(pad, km, prof, msg):
         elif km and key == "TEXT":
             for ch in str(v):
                 type_char(km, prof, ch)
-        elif km and key in prof.get("keys", {}):
-            km.write(e.EV_KEY, prof["keys"][key], 1 if v else 0)
-            km_dirty = True
         elif km and key in prof.get("mouse_buttons", {}):
             km.write(e.EV_KEY, prof["mouse_buttons"][key], 1 if v else 0)
             km_dirty = True
@@ -158,11 +166,14 @@ async def ws_handler(request):
 
     prof = PROFILES[mode]
 
+    pad = km = None
     try:
         pad = make_pad(i, prof)
         km = make_km(i, prof)
-    except PermissionError:
-        await ws.send_json({"error": "No access to /dev/uinput. Run with sudo."})
+    except Exception as ex:
+        if pad:
+            pad.close()
+        await ws.send_json({"error": f"uinput error: {ex}. Run with sudo."})
         await ws.close()
         return ws
 
@@ -177,8 +188,9 @@ async def ws_handler(request):
                     print(f"    pad {i + 1}: {msg.data}")
                 try:
                     apply(pad, km, prof, json.loads(msg.data))
-                except (ValueError, TypeError):
-                    pass
+                except Exception as ex:
+                    if app["verbose"]:
+                        print(f"    error: {ex!r}")
     finally:
         slots[i] = None
         pad.close()
@@ -197,13 +209,21 @@ def lan_ip():
         return "127.0.0.1"
 
 
+@web.middleware
+async def no_cache(request, handler):
+    resp = await handler(request)
+    if not resp.prepared:
+        resp.headers["Cache-Control"] = "no-store, max-age=0"
+    return resp
+
+
 def main():
     ap = argparse.ArgumentParser(description="Use phones as virtual gamepads.")
     ap.add_argument("--port", type=int, default=8080)
     ap.add_argument("-v", "--verbose", action="store_true", help="print every message from the phones")
     args = ap.parse_args()
 
-    app = web.Application()
+    app = web.Application(middlewares=[no_cache])
     app["verbose"] = args.verbose
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
