@@ -14,9 +14,13 @@
     <div class="modes">
       <button data-mode="xbox">Xbox 360</button>
       <button data-mode="ps4">PS4</button>
+      <button data-mode="steam">Steam Input</button>
     </div>
   </div>
   <div id="status">Not connected</div>
+
+  <!-- input مخفي لرفع كيبورد الهاتف الأصلي عند الحاجة -->
+  <input id="native-kb" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
 
   <!-- shoulders and triggers -->
   <div id="lt" class="k shoulder a" data-t="LT">LT</div>
@@ -24,11 +28,22 @@
   <div id="rb" class="k shoulder a" data-k="RB">RB</div>
   <div id="rt" class="k shoulder a" data-t="RT">RT</div>
 
+  <!-- Steam grip buttons -->
+  <div id="l4" class="k pill a steam-only" data-k="L4">L4</div>
+  <div id="r4" class="k pill a steam-only" data-k="R4">R4</div>
+
   <!-- centre cluster -->
   <div id="mid" class="a">
     <div class="k pill" data-k="BACK">Back</div>
     <div class="k pill" data-k="GUIDE">Guide</div>
     <div class="k pill" data-k="START">Start</div>
+    <div id="kb-toggle" class="k pill steam-only">⌨</div>
+    <div id="tp-toggle" class="k pill steam-only">🖱</div>
+  </div>
+
+  <!-- Steam Trackpad -->
+  <div id="trackpad" class="a">
+    <span>Trackpad (Tap = L-Click, 2-Finger = R-Click)</span>
   </div>
 
   <!-- left side: stick + d-pad -->
@@ -46,6 +61,67 @@
     <i></i><div class="k face" data-k="A">A</div><i></i>
   </div>
   <div id="right-stick" class="stick a" data-x="RX" data-y="RY" data-click="RS"><div class="knob"></div></div>
+
+  <!-- Steam On-Screen Keyboard Drawer -->
+  <div id="kb-drawer" class="a">
+    <div class="kb-row">
+      <div class="k kb-key" data-key="ESC">Esc</div>
+      <div class="k kb-key" data-key="TAB">Tab</div>
+      <div class="k kb-key" data-key="1">1</div>
+      <div class="k kb-key" data-key="2">2</div>
+      <div class="k kb-key" data-key="3">3</div>
+      <div class="k kb-key" data-key="4">4</div>
+      <div class="k kb-key" data-key="5">5</div>
+      <div class="k kb-key" data-key="6">6</div>
+      <div class="k kb-key" data-key="7">7</div>
+      <div class="k kb-key" data-key="8">8</div>
+      <div class="k kb-key" data-key="9">9</div>
+      <div class="k kb-key" data-key="0">0</div>
+      <div class="k kb-key wide" data-key="BACKSPACE">⌫</div>
+    </div>
+    <div class="kb-row">
+      <div class="k kb-key" data-key="Q">Q</div>
+      <div class="k kb-key" data-key="W">W</div>
+      <div class="k kb-key" data-key="E">E</div>
+      <div class="k kb-key" data-key="R">R</div>
+      <div class="k kb-key" data-key="T">T</div>
+      <div class="k kb-key" data-key="Y">Y</div>
+      <div class="k kb-key" data-key="U">U</div>
+      <div class="k kb-key" data-key="I">I</div>
+      <div class="k kb-key" data-key="O">O</div>
+      <div class="k kb-key" data-key="P">P</div>
+      <div class="k kb-key wide" data-key="ENTER">Enter</div>
+    </div>
+    <div class="kb-row">
+      <div class="k kb-key" data-key="A">A</div>
+      <div class="k kb-key" data-key="S">S</div>
+      <div class="k kb-key" data-key="D">D</div>
+      <div class="k kb-key" data-key="F">F</div>
+      <div class="k kb-key" data-key="G">G</div>
+      <div class="k kb-key" data-key="H">H</div>
+      <div class="k kb-key" data-key="J">J</div>
+      <div class="k kb-key" data-key="K">K</div>
+      <div class="k kb-key" data-key="L">L</div>
+      <div class="k kb-key" data-key="UP">▲</div>
+      <div id="native-kb-btn" class="k kb-key wide">📱 كيبورد</div>
+    </div>
+    <div class="kb-row">
+      <div class="k kb-key" data-key="SHIFT">Shift</div>
+      <div class="k kb-key" data-key="CTRL">Ctrl</div>
+      <div class="k kb-key" data-key="ALT">Alt</div>
+      <div class="k kb-key" data-key="Z">Z</div>
+      <div class="k kb-key" data-key="X">X</div>
+      <div class="k kb-key" data-key="C">C</div>
+      <div class="k kb-key" data-key="V">V</div>
+      <div class="k kb-key" data-key="B">B</div>
+      <div class="k kb-key" data-key="N">N</div>
+      <div class="k kb-key" data-key="M">M</div>
+      <div class="k kb-key xwide" data-key="SPACE">Space</div>
+      <div class="k kb-key" data-key="LEFT">◀</div>
+      <div class="k kb-key" data-key="DOWN">▼</div>
+      <div class="k kb-key" data-key="RIGHT">▶</div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
