@@ -1,0 +1,94 @@
+:root {
+  --body:#17181c; --well:#202228; --key:#2c2f38; --key-edge:#434753;
+  --ink:#e9e6dd; --muted:#8b8f9c; --press:#e9e6dd;
+  --a:#7bd195; --b:#ea7a72; --x:#79a6f0; --y:#ebc864;
+
+  /* One layout unit. The design is ~175u wide and 100u tall, so it shrinks to fit
+     any landscape screen instead of overlapping on narrow ones. */
+  --u: min(1vh, .5714vw);
+  --L: calc(var(--u) * 3 + env(safe-area-inset-left, 0px));
+  --R: calc(var(--u) * 3 + env(safe-area-inset-right, 0px));
+  --line: calc(var(--u) * .35);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; height: 100%; background: var(--body); color: var(--ink);
+  font: 600 calc(var(--u) * 3.4)/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow: hidden; touch-action: none; user-select: none;
+  -webkit-user-select: none; overscroll-behavior: none;
+}
+.a { position: absolute; }
+
+/* keys */
+.k {
+  display: flex; align-items: center; justify-content: center; background: var(--key);
+  border: var(--line) solid var(--key-edge); color: var(--muted); touch-action: none;
+  transition: background .05s, color .05s, transform .05s;
+}
+.k.on { background: var(--press); color: var(--body); border-color: var(--press); transform: scale(.94); }
+.face { border-radius: 50%; }
+.shoulder { width: calc(var(--u) * 22); height: calc(var(--u) * 10); border-radius: calc(var(--u) * 1.6) calc(var(--u) * 1.6) calc(var(--u) * 4) calc(var(--u) * 4); }
+.pill { width: calc(var(--u) * 13); height: calc(var(--u) * 6.5); border-radius: calc(var(--u) * 3.5); font-size: calc(var(--u) * 2.6); }
+
+/* four-way grids */
+.grid { display: grid; gap: calc(var(--u) * 1); }
+.dpad { grid-template-columns: repeat(3, calc(var(--u) * 11)); grid-template-rows: repeat(3, calc(var(--u) * 11)); }
+.dpad .k { border-radius: calc(var(--u) * 2); }
+.abxy { grid-template-columns: repeat(3, calc(var(--u) * 12.5)); grid-template-rows: repeat(3, calc(var(--u) * 12.5)); }
+
+[data-k=A] { color: var(--a); }
+[data-k=B] { color: var(--b); }
+[data-k=X] { color: var(--x); }
+[data-k=Y] { color: var(--y); }
+[data-k=A].on { background: var(--a); border-color: var(--a); color: var(--body); }
+[data-k=B].on { background: var(--b); border-color: var(--b); color: var(--body); }
+[data-k=X].on { background: var(--x); border-color: var(--x); color: var(--body); }
+[data-k=Y].on { background: var(--y); border-color: var(--y); color: var(--body); }
+
+/* analog sticks (both the same size) */
+.stick {
+  width: calc(var(--u) * 34); height: calc(var(--u) * 34); border-radius: 50%; background: var(--well);
+  border: var(--line) solid var(--key-edge); touch-action: none;
+}
+.knob {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--u) * 15); height: calc(var(--u) * 15);
+  margin: calc(var(--u) * -7.5) 0 0 calc(var(--u) * -7.5); border-radius: 50%; background: var(--key);
+  border: var(--line) solid var(--muted); pointer-events: none;
+}
+.stick.live .knob { background: var(--press); border-color: var(--press); }
+
+/* status and start gate */
+#status { position: absolute; left: 50%; top: calc(var(--u) * 2); transform: translateX(-50%); font-size: calc(var(--u) * 2.4); color: var(--muted); }
+#gate {
+  position: fixed; inset: 0; z-index: 5; display: flex; flex-direction: column; gap: calc(var(--u) * 2);
+  align-items: center; justify-content: center; background: var(--body); text-align: center;
+}
+#gate b { font-size: calc(var(--u) * 6); }
+#gate span { color: var(--muted); font-size: calc(var(--u) * 2.8); font-weight: 500; }
+.modes { display: flex; gap: calc(var(--u) * 5); margin-top: calc(var(--u) * 2); }
+.modes button {
+  font: inherit; color: var(--ink); background: var(--key); border: var(--line) solid var(--key-edge);
+  border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 3) calc(var(--u) * 9); touch-action: manipulation;
+}
+.modes button:active { background: var(--press); color: var(--body); }
+
+/* ---- layout zones: top row / left side / right side / centre ---- */
+#lt { left: var(--L); top: calc(var(--u) * 6); }
+#lb { left: calc(var(--L) + var(--u) * 24); top: calc(var(--u) * 6); }
+#rt { right: var(--R); top: calc(var(--u) * 6); }
+#rb { right: calc(var(--R) + var(--u) * 24); top: calc(var(--u) * 6); }
+
+#mid { left: 50%; top: calc(var(--u) * 8); transform: translateX(-50%); display: flex; gap: calc(var(--u) * 2); }
+
+/* right side is identical in both modes */
+#abxy { right: calc(var(--R) + var(--u) * 3); top: calc(var(--u) * 22); }
+#right-stick { right: calc(var(--R) + var(--u) * 45); bottom: calc(var(--u) * 6); }
+
+/* Xbox: left stick high-left, d-pad low and inward */
+#left-stick { left: calc(var(--L) + var(--u) * 4); top: calc(var(--u) * 26); }
+#dpad { left: calc(var(--L) + var(--u) * 45); bottom: calc(var(--u) * 6); }
+
+/* PS4: mirror of the right side. d-pad high-left, left stick low and inward */
+body[data-mode=ps4] #dpad { left: calc(var(--L) + var(--u) * 3); top: calc(var(--u) * 22); bottom: auto; }
+body[data-mode=ps4] #left-stick { left: calc(var(--L) + var(--u) * 45); top: auto; bottom: calc(var(--u) * 6); }
+body[data-mode=ps4] { --a:#79a6f0; --b:#ea7a72; --x:#e58fc0; --y:#7bd195; }
