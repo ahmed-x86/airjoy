@@ -3,8 +3,6 @@
   --ink:#e9e6dd; --muted:#8b8f9c; --press:#e9e6dd;
   --a:#7bd195; --b:#ea7a72; --x:#79a6f0; --y:#ebc864;
 
-  /* One layout unit. The design is ~175u wide and 100u tall, so it shrinks to fit
-     any landscape screen instead of overlapping on narrow ones. */
   --u: min(1vh, .5714vw);
   --L: calc(var(--u) * 3 + env(safe-area-inset-left, 0px));
   --R: calc(var(--u) * 3 + env(safe-area-inset-right, 0px));
@@ -19,16 +17,20 @@ html, body {
 }
 .a { position: absolute; }
 
+#native-kb {
+  position: fixed; top: -100px; left: -100px; width: 1px; height: 1px; opacity: 0; pointer-events: none;
+}
+
 /* keys */
 .k {
   display: flex; align-items: center; justify-content: center; background: var(--key);
   border: var(--line) solid var(--key-edge); color: var(--muted); touch-action: none;
   transition: background .05s, color .05s, transform .05s;
 }
-.k.on { background: var(--press); color: var(--body); border-color: var(--press); transform: scale(.94); }
+.k.on, .k.active-toggle { background: var(--press); color: var(--body); border-color: var(--press); transform: scale(.94); }
 .face { border-radius: 50%; }
 .shoulder { width: calc(var(--u) * 22); height: calc(var(--u) * 10); border-radius: calc(var(--u) * 1.6) calc(var(--u) * 1.6) calc(var(--u) * 4) calc(var(--u) * 4); }
-.pill { width: calc(var(--u) * 13); height: calc(var(--u) * 6.5); border-radius: calc(var(--u) * 3.5); font-size: calc(var(--u) * 2.6); }
+.pill { width: calc(var(--u) * 11.5); height: calc(var(--u) * 6.5); border-radius: calc(var(--u) * 3.5); font-size: calc(var(--u) * 2.5); }
 
 /* four-way grids */
 .grid { display: grid; gap: calc(var(--u) * 1); }
@@ -45,7 +47,7 @@ html, body {
 [data-k=X].on { background: var(--x); border-color: var(--x); color: var(--body); }
 [data-k=Y].on { background: var(--y); border-color: var(--y); color: var(--body); }
 
-/* analog sticks (both the same size) */
+/* analog sticks */
 .stick {
   width: calc(var(--u) * 34); height: calc(var(--u) * 34); border-radius: 50%; background: var(--well);
   border: var(--line) solid var(--key-edge); touch-action: none;
@@ -65,30 +67,64 @@ html, body {
 }
 #gate b { font-size: calc(var(--u) * 6); }
 #gate span { color: var(--muted); font-size: calc(var(--u) * 2.8); font-weight: 500; }
-.modes { display: flex; gap: calc(var(--u) * 5); margin-top: calc(var(--u) * 2); }
+.modes { display: flex; gap: calc(var(--u) * 4); margin-top: calc(var(--u) * 2); flex-wrap: wrap; justify-content: center; }
 .modes button {
   font: inherit; color: var(--ink); background: var(--key); border: var(--line) solid var(--key-edge);
-  border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 3) calc(var(--u) * 9); touch-action: manipulation;
+  border-radius: calc(var(--u) * 2); padding: calc(var(--u) * 3) calc(var(--u) * 7); touch-action: manipulation;
 }
 .modes button:active { background: var(--press); color: var(--body); }
 
-/* ---- layout zones: top row / left side / right side / centre ---- */
+/* layout zones */
 #lt { left: var(--L); top: calc(var(--u) * 6); }
 #lb { left: calc(var(--L) + var(--u) * 24); top: calc(var(--u) * 6); }
 #rt { right: var(--R); top: calc(var(--u) * 6); }
 #rb { right: calc(var(--R) + var(--u) * 24); top: calc(var(--u) * 6); }
 
-#mid { left: 50%; top: calc(var(--u) * 8); transform: translateX(-50%); display: flex; gap: calc(var(--u) * 2); }
+#mid { left: 50%; top: calc(var(--u) * 8); transform: translateX(-50%); display: flex; gap: calc(var(--u) * 1.5); }
 
-/* right side is identical in both modes */
 #abxy { right: calc(var(--R) + var(--u) * 3); top: calc(var(--u) * 22); }
 #right-stick { right: calc(var(--R) + var(--u) * 45); bottom: calc(var(--u) * 6); }
 
-/* Xbox: left stick high-left, d-pad low and inward */
 #left-stick { left: calc(var(--L) + var(--u) * 4); top: calc(var(--u) * 26); }
 #dpad { left: calc(var(--L) + var(--u) * 45); bottom: calc(var(--u) * 6); }
 
-/* PS4: mirror of the right side. d-pad high-left, left stick low and inward */
+/* PS4 mode */
 body[data-mode=ps4] #dpad { left: calc(var(--L) + var(--u) * 3); top: calc(var(--u) * 22); bottom: auto; }
 body[data-mode=ps4] #left-stick { left: calc(var(--L) + var(--u) * 45); top: auto; bottom: calc(var(--u) * 6); }
 body[data-mode=ps4] { --a:#79a6f0; --b:#ea7a72; --x:#e58fc0; --y:#7bd195; }
+
+/* Steam Input mode */
+.steam-only { display: none; }
+body[data-mode=steam] {
+  --body:#12161f; --well:#1b222f; --key:#232c3d; --key-edge:#374661; --press:#1a9fff;
+}
+body[data-mode=steam] .steam-only { display: flex; }
+#l4 { left: calc(var(--L) + var(--u) * 46); top: calc(var(--u) * 46); }
+#r4 { right: calc(var(--R) + var(--u) * 46); top: calc(var(--u) * 46); }
+
+/* Steam Trackpad */
+#trackpad {
+  display: none; left: 50%; top: calc(var(--u) * 18); transform: translateX(-50%);
+  width: calc(var(--u) * 52); height: calc(var(--u) * 38); border-radius: calc(var(--u) * 3);
+  background: rgba(27, 34, 47, 0.92); border: var(--line) dashed var(--key-edge);
+  align-items: center; justify-content: center; color: var(--muted); font-size: calc(var(--u) * 2.2);
+  z-index: 3;
+}
+#trackpad.open { display: flex; }
+
+/* Steam Keyboard Drawer */
+#kb-drawer {
+  display: none; left: 50%; bottom: calc(var(--u) * 2); transform: translateX(-50%);
+  width: calc(100vw - var(--u) * 8); padding: calc(var(--u) * 2);
+  background: rgba(18, 22, 31, 0.95); border: var(--line) solid var(--key-edge);
+  border-radius: calc(var(--u) * 3); flex-direction: column; gap: calc(var(--u) * 1.2);
+  z-index: 4;
+}
+#kb-drawer.open { display: flex; }
+.kb-row { display: flex; gap: calc(var(--u) * 1); justify-content: center; }
+.kb-key {
+  flex: 1; height: calc(var(--u) * 9.5); border-radius: calc(var(--u) * 1.5);
+  font-size: calc(var(--u) * 2.6); color: var(--ink);
+}
+.kb-key.wide { flex: 1.8; }
+.kb-key.xwide { flex: 3.5; }
