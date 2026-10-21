@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#17181c">
+  <title>Phone Pad</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="xbox">
+  <div id="gate">
+    <b>Phone Pad</b>
+    <span>Choose a controller type to connect</span>
+    <div class="modes">
+      <button data-mode="xbox">Xbox 360</button>
+      <button data-mode="ps4">PS4</button>
+    </div>
+  </div>
+  <div id="status">Not connected</div>
+
+  <!-- shoulders and triggers -->
+  <div id="lt" class="k shoulder a" data-t="LT">LT</div>
+  <div id="lb" class="k shoulder a" data-k="LB">LB</div>
+  <div id="rb" class="k shoulder a" data-k="RB">RB</div>
+  <div id="rt" class="k shoulder a" data-t="RT">RT</div>
+
+  <!-- centre cluster -->
+  <div id="mid" class="a">
+    <div class="k pill" data-k="BACK">Back</div>
+    <div class="k pill" data-k="GUIDE">Guide</div>
+    <div class="k pill" data-k="START">Start</div>
+  </div>
+
+  <!-- left side: stick + d-pad -->
+  <div id="left-stick" class="stick a" data-x="LX" data-y="LY" data-click="LS"><div class="knob"></div></div>
+  <div id="dpad" class="grid dpad a">
+    <i></i><div class="k" data-d="DY:-1">&#9650;</div><i></i>
+    <div class="k" data-d="DX:-1">&#9664;</div><i></i><div class="k" data-d="DX:1">&#9654;</div>
+    <i></i><div class="k" data-d="DY:1">&#9660;</div><i></i>
+  </div>
+
+  <!-- right side: face buttons + stick -->
+  <div id="abxy" class="grid abxy a">
+    <i></i><div class="k face" data-k="Y">Y</div><i></i>
+    <div class="k face" data-k="X">X</div><i></i><div class="k face" data-k="B">B</div>
+    <i></i><div class="k face" data-k="A">A</div><i></i>
+  </div>
+  <div id="right-stick" class="stick a" data-x="RX" data-y="RY" data-click="RS"><div class="knob"></div></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
