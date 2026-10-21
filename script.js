@@ -64,12 +64,12 @@ document.querySelectorAll('.stick').forEach(el => {
   releasers.push(() => { if (id !== null) rest(); });
 });
 
-/* Steam Keyboard Keys */
+/* Steam Keyboard Keys (sent with KB_ prefix so they don't clash with gamepad buttons) */
 document.querySelectorAll('.kb-key[data-key]').forEach(el => {
   const key = el.dataset.key;
   const set = v => {
     el.classList.toggle('on', !!v);
-    send({ [key]: v }, true);
+    send({ ['KB_' + key]: v }, true);
   };
   el.addEventListener('pointerdown', ev => { el.setPointerCapture(ev.pointerId); set(1); buzz(); ev.preventDefault(); });
   ['pointerup', 'pointercancel'].forEach(n => el.addEventListener(n, () => set(0)));
@@ -104,11 +104,11 @@ nativeKb.addEventListener('input', () => {
 
 nativeKb.addEventListener('keydown', ev => {
   if (ev.key === 'Backspace') {
-    send({ BACKSPACE: 1 }, true);
-    setTimeout(() => send({ BACKSPACE: 0 }, true), 40);
+    send({ KB_BACKSPACE: 1 }, true);
+    setTimeout(() => send({ KB_BACKSPACE: 0 }, true), 40);
   } else if (ev.key === 'Enter') {
-    send({ ENTER: 1 }, true);
-    setTimeout(() => send({ ENTER: 0 }, true), 40);
+    send({ KB_ENTER: 1 }, true);
+    setTimeout(() => send({ KB_ENTER: 0 }, true), 40);
   }
 });
 
