@@ -1,4 +1,4 @@
-# Phone Pad
+# airjoy
 
 Turn your smartphone into a virtual gamepad for Linux over the local network via browser.
 
